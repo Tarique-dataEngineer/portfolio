@@ -14,23 +14,31 @@ const Contact = () => {
   // Handle input changes
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
+    setFormData({ ...formData, [id]: value }); // Update the specific field in formData
+    console.log(`Updated formData: ${id} = ${value}`); // Debugging log
   };
+  
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwhFEPyNKE2lql5j5BWK5JRcZnmVBPprpfrf-4L8kWclKXGbX-P8uKiI0lzWUKcgdum/exec"; // Replace with your Google Apps Script URL
-
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      setStatus("All fields are required.");
+      return;
+    }
+  
     try {
-      const response = await fetch(scriptURL, {
+      // Replace with your backend API endpoint
+      const response = await fetch("http://localhost:4000/api/form/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData), // Send formData in the request body
       });
-
+  
       const result = await response.json();
+      console.log("Response from server:", result); // Debugging log
+  
       if (result.success) {
         setStatus("Message sent successfully!");
         setFormData({ name: "", email: "", subject: "", message: "" }); // Clear the form
@@ -42,6 +50,7 @@ const Contact = () => {
       setStatus("An error occurred. Please try again.");
     }
   };
+  
 
   return (
     <section id="contact" className="py-20 bg-white">
@@ -98,7 +107,6 @@ const Contact = () => {
                   </div>
                 </div>
               </div>
-
               <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl">
                 <h3 className="text-2xl font-bold mb-6">Availability</h3>
                 <div className="space-y-6">
@@ -132,7 +140,6 @@ const Contact = () => {
                 </div>
               </div>
             </div>
-
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-sm">
               <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
               <div className="space-y-6">
@@ -147,7 +154,7 @@ const Contact = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     placeholder="John Smith"
-                    required  
+                    required
                   />
                 </div>
                 <div>
@@ -199,9 +206,7 @@ const Contact = () => {
                   Send Message
                 </button>
               </div>
-              {status && (
-                <p className="mt-4 text-sm text-gray-600 text-center">{status}</p>
-              )}
+              {status && <p className="mt-4 text-sm text-gray-600 text-center">{status}</p>}
             </form>
           </div>
         </div>
@@ -211,3 +216,4 @@ const Contact = () => {
 };
 
 export default Contact;
+
