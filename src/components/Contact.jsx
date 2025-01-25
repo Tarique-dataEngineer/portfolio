@@ -30,7 +30,7 @@ const Contact = () => {
   
     try {
       // Replace with your backend API endpoint
-      const response = await fetch("http://localhost:4000/api/form/contact", {
+      const response = await fetch("https://portfolio-backend-alpha-gray.vercel.app/api/form/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData), // Send formData in the request body
